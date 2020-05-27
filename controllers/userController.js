@@ -40,7 +40,7 @@ export const postLogin = passport.authenticate("local", { // authenticate는 use
 export const githubLogin = passport.authenticate("github");
 
 export const githubLoginCallback = async (_, __, profile, cb) => {
-    const { _json: {id, avatar_url, name, email, } } = profile;
+    const { _json: {id, avatar_url: avatarUrl, name, email, } } = profile;
     try{
         const user = await User.findOne({email})
         if(user) {
@@ -68,7 +68,10 @@ export const logout = (req, res) => {
     req.logout(); // passport로 인하여 req.logout()만 쓰면 쿠키 등등을 일괄 처리해줌.
     res.redirect(routes.home);
 }
-export const users = (req, res) => res.render("users", {pageTitle:"Users"});
+export const getMe = (req, res) => {
+    res.render("UserDetail", {pageTitle:"User Detail", user: req.user});
+}
+
+export const userDetail = (req, res) => res.render("UserDetail", {pageTitle:"User Detail"});
 export const changePassword = (req, res) => res.render("ChangePassword", {pageTitle:"Change Password"});
 export const editProfile = (req, res) => res.render("EditProfile", {pageTitle:"Edit Profile"});
-export const userDetail = (req, res) => res.render("UserDetail", {pageTitle:"User Detail"});

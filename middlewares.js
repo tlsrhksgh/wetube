@@ -6,7 +6,7 @@ const multerVideo = multer({dest:"uploads/videos/"});
 export const localsMiddleWare = (req, res, next) => {
     res.locals.siteName = "WeTube";
     res.locals.routes = routes;
-    res.locals.user = req.user || null ;//passport가 user가 담긴 object를 request에도 담아서 준다.
+    res.locals.loggedUser = req.user || null ;//passport가 user가 담긴 object를 request에도 담아서 준다.
     next();
 }
 

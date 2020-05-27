@@ -10,6 +10,7 @@ const USERS = "/users";
 const EDIT_PROFILE = "/edit-profile";
 const CHANGE_PASSWORD = "/change-password";
 const USER_DETAIL = "/:id";
+const ME = "/me";
 
 
 //Videos
@@ -33,6 +34,7 @@ const routes = {
     users: USERS,
     editProfile: EDIT_PROFILE,
     changePassword: CHANGE_PASSWORD,
+    
     userDetail: id => {
         if(id){
             return `/users/${id}`;
@@ -64,7 +66,8 @@ const routes = {
         }
     },
     gitHub: GITHUB, 
-    githubCallback: GITHUB_CALLBACK
+    githubCallback: GITHUB_CALLBACK,
+    me: ME
 };
 
 export default routes;
