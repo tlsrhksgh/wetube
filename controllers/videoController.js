@@ -40,9 +40,11 @@ export const postUpload = async(req, res) => {
     const newVideo = await Video.create({
         fileUrl: path,
         title,
-        description
+        description,
+        creator: req.user.id
     });
-    console.log(newVideo);
+    req.user.videos.push(newVideo.id);
+    req.user.save();
     res.redirect(routes.videoDetail(newVideo.id));
 };
 
@@ -52,7 +54,7 @@ export const videoDetail = async(req, res) => {
         params: {id}
     } = req;
     try{
-        const video = await Video.findById(id);
+        const video = await Video.findById(id).populate("creator"); //.populate 객체를 데려오는 함수
         res.render("videoDetail", {pageTitle: video.title, video});
     }catch(error){
         console.log(error);
@@ -67,7 +69,11 @@ export const getEditVideo = async(req, res)  => { // get은 무언가 채워놓�
     } = req;
     try{
         const video = await Video.findById(id); 
+        if(video.creator !== req.user.id){
+            throw error();
+        } else {
         res.render("editVideo", {pageTitle: `Edit ${video.title}`, video}); // 템플릿으로 Data를 내보내는 작업
+        }
     }catch(error){
         res.redirect(routes.home);
     }
@@ -94,9 +100,15 @@ export const deleteVideo = async(req, res) => {
         params: {id}
     } = req;
     try{
-        await Video.findOneAndDelete({_id: id}, {id});
-     }catch(error){
+        const video = await Video.findById(id); 
+        if(video.creator !== req.user.id){
+            throw error();
+        } else {
+            await Video.findOneAndDelete({_id: id});
+        //res.render("editVideo", {pageTitle: `Edit ${video.title}`, video}); 템플릿으로 Data를 내보내는 작업
+        }
+    }catch(error){
+        console.log(error);
     }
-    res.redirect(routes.home); // try부분과 redirect 경로가 겹쳐지므로 밖으로 빼놓음. 이렇게 되면 삭제가 성공하던 실패하던 home으로 이동.
-    
-}
+    res.redirect(routes.home); // try부분과 redirect 경로가 겹쳐지므로 밖으로 빼놓음. 이렇게 되면 삭제가 성공하던 실패하던 home으로 이동.  
+};
