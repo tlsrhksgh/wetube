@@ -54,10 +54,9 @@ export const videoDetail = async(req, res) => {
         params: {id}
     } = req;
     try{
-        const video = await Video.findById(id).populate("creator"); //.populate 객체를 데려오는 함수
+        const video = await Video.findById(id).populate("creator"); //.populate:객체를 데려오는 함수
         res.render("videoDetail", {pageTitle: video.title, video});
     }catch(error){
-        console.log(error);
         res.redirect(routes.home);
     }
    
