@@ -7,6 +7,13 @@ const currentTime = document.getElementById("currentTime");
 const totalTime = document.getElementById("totalTime");
 const volumeRange = document.getElementById("jsVolume");
 
+const registerView = () => {
+    const videoId = window.location.href.split("/videos/")[1]; //split으로 스트링을 분할한 뒤 2번째 URL을 받아봄.
+    fetch(`/api/${videoId}/view`, {
+        method: "POST"
+    });
+};
+
 function handlePlayClick(){
     if(videoPlayer.paused){
         videoPlayer.play();
@@ -75,6 +82,7 @@ function setTotalTime(){
 }
 
 function handleEnded() {
+    registerView();
     videoPlayer.currentTime = 0;
     playBtn.innerHTML = '<i class="fas fa-play"></i>';
 }
